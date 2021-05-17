@@ -1,19 +1,38 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../models/meal.dart';
+import '../components/main_drawer.dart';
 import './categories_screen.dart';
 import './favorite_screen.dart';
 
 class TabsScreen extends StatefulWidget {
+  final List<Meal> favoriteMeals;
+
+  const TabsScreen(this.favoriteMeals);
+
   @override
   _TabsScreenState createState() => _TabsScreenState();
 }
 
 class _TabsScreenState extends State<TabsScreen> {
   int _selectedScreen = 0;
-  final List<Widget> _screens = [
-    CategoriesScreen(),
-    FavoriteScreen(),
-  ];
+
+  List<Map<String, Object>> _screens;
+
+  @override
+  void initState() {
+    super.initState();
+    _screens = [
+      {
+        'title': 'Lista de categorias',
+        'screen': CategoriesScreen(),
+      },
+      {
+        'title': 'Meu Favoritos',
+        'screen': FavoriteScreen(widget.favoriteMeals),
+      },
+    ];
+  }
 
   _selectScreen(int index) {
     setState(() {
@@ -30,7 +49,8 @@ class _TabsScreenState extends State<TabsScreen> {
         appBar: AppBar(
           title: Text('Vamos Cozinhar'),
         ),
-        body: _screens[_selectedScreen],
+        drawer: MainDrawer(),
+        body: _screens[_selectedScreen]['screen'],
         bottomNavigationBar: BottomNavigationBar(
           onTap: _selectScreen,
           unselectedItemColor: Colors.white,
